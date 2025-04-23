@@ -1,6 +1,19 @@
-part of 'mood_entry_bloc.dart';
+import 'models/mood_model.dart';
 
-@immutable
-sealed class MoodEntryState {}
+abstract class MoodState {}
 
-final class MoodEntryInitial extends MoodEntryState {}
+class MoodInitial extends MoodState {}
+
+class MoodLoading extends MoodState {}
+
+class MoodLoaded extends MoodState {
+  final List<MoodEntry> entries;
+
+  MoodLoaded({required this.entries});
+}
+
+class MoodError extends MoodState {
+  final String message;
+
+  MoodError({required this.message});
+}
