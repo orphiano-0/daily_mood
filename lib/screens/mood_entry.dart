@@ -58,10 +58,10 @@ class _MoodEntryScreen extends State<MoodEntryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Mood Entry'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/'),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () => context.go('/'),
+        // ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

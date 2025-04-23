@@ -13,23 +13,24 @@ class MoodNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<NavigationBloc, NavigationState>(
       listener: (context, state) {
-        if (state is NavigationState) {
-          switch (state.currentIndex) {
-            case 0:
-              context.go('/dashboard');
-              break;
-            case 1:
-              context.go('/history');
-              break;
-            case 2:
-              context.go('/statistics');
-              break;
-            case 3:
-              context.go('/settings');
-              break;
-          }
+        switch (state.currentIndex) {
+          case 0:
+            context.go('/');
+            break;
+          case 1:
+            context.go('/dashboard');
+            break;
+          case 2:
+            context.go('/history');
+            break;
+          case 3:
+            context.go('/statistics');
+            break;
+          case 4:
+            context.go('/settings');
+            break;
         }
-      },
+            },
       builder: (context, state) {
         return BottomNavigationBar(
           backgroundColor: Colors.blueGrey.shade900,
@@ -42,6 +43,10 @@ class MoodNavigationBar extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.home, size: 24),
               label: 'HOME',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.note, size: 24),
+              label: 'ADD',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.note, size: 24),
