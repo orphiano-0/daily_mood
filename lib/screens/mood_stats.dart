@@ -1,4 +1,3 @@
-import 'package:daily_moode/shared/widgets/ranking_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -10,44 +9,51 @@ class MoodStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('wow')),
-      backgroundColor: const Color.fromARGB(255, 224, 224, 224),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            _chartTwo(),
-
-            Container(
-              width: double.infinity,
-              height: 300,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
+      appBar: AppBar(
+        title: const Text(
+          'STATISTICS',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontFamily: 'Pixel', // Use a pixelated font for retro style
+          ),
+        ),
+        backgroundColor: Colors.blueGrey.shade900, // Dark background for retro feel
+        centerTitle: true,
+        elevation: 0, // Flat look
+      ),
+      backgroundColor: const Color.fromARGB(255, 20, 20, 20), // Dark gray for contrast
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _chartTwo(),
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                height: 300,
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 30, 30, 30), // Slightly lighter gray
+                  border: Border.all(color: Colors.white, width: 2), // Bold white outline
+                ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    RankingBar(
-                      title: "Secondary",
-                      color: Colors.grey,
-                      heightFactor: 0.7,
-                    ),
-                    RankingBar(
-                      title: "Leading",
-                      color: Colors.amber,
-                      heightFactor: 1.0,
-                    ),
-                    RankingBar(
-                      title: "Third",
-                      color: Colors.brown,
-                      heightFactor: 0.5,
-                    ),
+                    _rankingBar("SECONDARY", Colors.grey, 0.7),
+                    _rankingBar("LEADING", Colors.amber, 1.0),
+                    _rankingBar("THIRD", Colors.brown, 0.5),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+      bottomNavigationBar: const MoodNavigationBar(),
     );
   }
 }
@@ -59,21 +65,93 @@ SizedBox _chartTwo() {
     child: Stack(
       alignment: Alignment.center,
       children: [
-        Text('STATS'),
+        const Text(
+          'MOOD DISTRIBUTION',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Pixel', // Blocky font
+            color: Colors.white,
+          ),
+        ),
         PieChart(
-          duration: Duration(microseconds: 750),
-          curve: Curves.easeInOut,
           PieChartData(
+            sectionsSpace: 4,
+            centerSpaceRadius: 50,
             sections: [
-              // Item 1
-              PieChartSectionData(value: 10, color: Colors.blue),
-              // Item 2
-              PieChartSectionData(value: 30, color: Colors.redAccent),
-              // Item 3
-              PieChartSectionData(value: 10, color: Colors.amberAccent),
-              // Item 4
-              PieChartSectionData(value: 20, color: Colors.deepOrange),
+              PieChartSectionData(
+                value: 25,
+                color: Colors.blue,
+                title: '25%',
+                titleStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Pixel', // Retro font
+                  color: Colors.white,
+                ),
+              ),
+              PieChartSectionData(
+                value: 35,
+                color: Colors.redAccent,
+                title: '35%',
+                titleStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Pixel',
+                  color: Colors.white,
+                ),
+              ),
+              PieChartSectionData(
+                value: 20,
+                color: Colors.amberAccent,
+                title: '20%',
+                titleStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Pixel',
+                  color: Colors.white,
+                ),
+              ),
+              PieChartSectionData(
+                value: 20,
+                color: Colors.deepOrange,
+                title: '20%',
+                titleStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Pixel',
+                  color: Colors.white,
+                ),
+              ),
             ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Expanded _rankingBar(String title, Color color, double heightFactor) {
+  return Expanded(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          height: 250 * heightFactor,
+          width: 40,
+          decoration: BoxDecoration(
+            color: color,
+            border: Border.all(color: Colors.white, width: 2), // Bold outline
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Pixel', // Retro font
+            color: Colors.white,
           ),
         ),
       ],
