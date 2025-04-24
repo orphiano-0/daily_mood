@@ -1,20 +1,17 @@
+import 'package:daily_moode/screens/main_screen.dart';
 import 'package:daily_moode/screens/mood_details.dart';
 import 'package:daily_moode/screens/mood_entry.dart';
 import 'package:daily_moode/screens/mood_lists.dart';
 import 'package:daily_moode/screens/mood_settings.dart';
 import 'package:daily_moode/screens/mood_stats.dart';
-import 'package:daily_moode/screens/scaffoldnavbar.dart';
 import 'package:go_router/go_router.dart';
-
-import '../features/mood_entry/models/mood_model.dart';
-import '../screens/main_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
-        return ScaffoldWithNavBar(child: child);
+        return MainScreen(child: child);
       },
       routes: [
         GoRoute(path: '/', builder: (context, state) => MoodLists()),

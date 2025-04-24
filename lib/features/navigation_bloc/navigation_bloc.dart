@@ -8,7 +8,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   NavigationBloc() : super(NavigationState(currentIndex: 0)) {
     on<NavigationOnChanged>((event, emit) {
       emit(NavigationState(currentIndex: event.currentIndex));
-      print(event.currentIndex);
     });
   }
 }
