@@ -15,9 +15,7 @@ class MoodLists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Entries'),
-      ),
+      appBar: AppBar(title: const Text('Your Entries')),
       body: BlocBuilder<MoodBloc, MoodState>(
         builder: (context, state) {
           if (state is MoodInitial || state is MoodLoading) {
@@ -37,7 +35,7 @@ class MoodLists extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () => context.go('/dashboard'),
+                      onPressed: () => context.go('/diary'),
                       child: const Text('Add Entry'),
                     ),
                   ],
@@ -56,7 +54,6 @@ class MoodLists extends StatelessWidget {
           return const Center(child: Text('Unknown state'));
         },
       ),
-      bottomNavigationBar: MoodNavigationBar(),
     );
   }
 
@@ -69,7 +66,7 @@ class MoodLists extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () => context.go('/detail/${entry.id}'),
+        onTap: () => context.go('/moodDetails/${entry.id}'),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -79,7 +76,10 @@ class MoodLists extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: entry.getMoodColor(),
                       borderRadius: BorderRadius.circular(16),
@@ -98,17 +98,11 @@ class MoodLists extends StatelessWidget {
                     children: [
                       Text(
                         dateFormat.format(entry.timestamp),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[700],
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
                       Text(
                         timeFormat.format(entry.timestamp),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[500],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                       ),
                     ],
                   ),
@@ -125,33 +119,38 @@ class MoodLists extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () => context.go('/detail/${entry.id}'),
-                    child: const Text('Read More'),
-                  ),
+                  TextButton(onPressed: () {}, child: const Text('Read More')),
                   IconButton(
                     icon: const Icon(Icons.delete_outline),
                     color: Colors.red[400],
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Delete Entry?'),
-                          content: const Text('This action cannot be undone.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel'),
+                        builder:
+                            (context) => AlertDialog(
+                              title: const Text('Delete Entry?'),
+                              content: const Text(
+                                'This action cannot be undone.',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    context.read<MoodBloc>().add(
+                                      DeleteMoodEntry(id: entry.id),
+                                    );
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
                             ),
-                            TextButton(
-                              onPressed: () {
-                                context.read<MoodBloc>().add(DeleteMoodEntry(id: entry.id));
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
-                        ),
                       );
                     },
                   ),

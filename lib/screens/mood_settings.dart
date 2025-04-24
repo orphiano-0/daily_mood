@@ -20,7 +20,6 @@ class MoodSettings extends StatelessWidget {
         backgroundColor: Colors.blueGrey.shade900,
         centerTitle: true,
       ),
-      bottomNavigationBar: MoodNavigationBar(),
     );
   }
 }
