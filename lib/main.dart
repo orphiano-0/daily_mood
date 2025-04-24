@@ -20,10 +20,8 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => NavigationBloc()),
-        BlocProvider(
-          create: (_) => MoodBloc(moodBox),
-        ),
-        BlocProvider(create: (_) => SliderBloc())
+        BlocProvider(create: (_) => MoodBloc(moodBox)),
+        BlocProvider(create: (_) => SliderBloc()),
       ],
       child: const MyApp(),
     ),

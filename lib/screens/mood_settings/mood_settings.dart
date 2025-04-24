@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../features/mood_entry/mood_entry_bloc.dart';
-import '../features/mood_entry/mood_entry_event.dart';
-import '../shared/theme/theme_controller.dart';
+import '../../features/mood_entry/mood_entry_bloc.dart';
+import '../../features/mood_entry/mood_entry_event.dart';
+import '../../shared/theme/theme_controller.dart';
 
 class MoodSettings extends StatefulWidget {
   const MoodSettings({super.key});
@@ -174,8 +174,7 @@ class _MoodSettingsState extends State<MoodSettings> {
                 color: Colors.white,
               ),
             ),
-            backgroundColor:
-            Colors.blueGrey.shade900, // Dark background for retro feel
+            backgroundColor: Colors.blueGrey.shade900,
             centerTitle: true,
             elevation: 0,
           ),

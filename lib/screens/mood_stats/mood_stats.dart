@@ -8,8 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
-import '../features/mood_entry/models/mood_models.dart';
-import '../shared/widgets/mood_navigation.dart';
+import '../../features/mood_entry/models/mood_models.dart';
+import '../../shared/widgets/mood_navigation.dart';
 
 class MoodStats extends StatelessWidget {
   const MoodStats({super.key});

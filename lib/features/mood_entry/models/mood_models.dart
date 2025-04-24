@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 part 'mood_models.g.dart';
 
 @HiveType(typeId: 0)
-class MoodModel {
+class MoodModel extends HiveObject{
   @HiveField(0)
   int moodId;
 

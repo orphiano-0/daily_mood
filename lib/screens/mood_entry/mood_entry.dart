@@ -2,6 +2,7 @@ import 'package:daily_moode/features/carousel_bloc/carousel_state.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_event.dart';
 import 'package:daily_moode/features/mood_entry/models/mood_models.dart';
+import 'package:daily_moode/shared/widgets/mood_button.dart';
 import 'package:daily_moode/shared/widgets/mood_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,63 +60,71 @@ class MoodEntry extends StatelessWidget {
             height: double.infinity,
             color: currentCategory.color,
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.20,
-                    width: double.infinity,
-                    child: ValueListenableBuilder<int>(
-                      valueListenable: _currentIndexNotifier,
-                      builder: (context, currentIndex, child) {
-                        return PageView(
-                          controller: _pageController,
-                          onPageChanged: (index) {
-                            _currentIndexNotifier.value = index;
-                            context.read<SliderBloc>().add(
-                              SliderOnChanged(currentSliderIndex: index + 1),
-                            );
-                            print(
-                              'Current Index: $index',
-                            ); // Prints the current index
-                          },
-                          children:
-                              EmojiCategory.values.skip(1).map((category) {
-                                return _carouselItem(category.image);
-                              }).toList(),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      width: double.infinity,
+                      child: ValueListenableBuilder<int>(
+                        valueListenable: _currentIndexNotifier,
+                        builder: (context, currentIndex, child) {
+                          return PageView(
+                            controller: _pageController,
+                            onPageChanged: (index) {
+                              _currentIndexNotifier.value = index;
+                              context.read<SliderBloc>().add(
+                                SliderOnChanged(currentSliderIndex: index + 1),
+                              );
+                            },
+                            children:
+                                EmojiCategory.values.skip(1).map((category) {
+                                  return _carouselItem(category.image);
+                                }).toList(),
+                          );
+                        },
+                      ),
+                    ),
+                    Text(
+                      currentCategory.label,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Pixel'),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(height: 20),
+                    MoodJournalEntry(journalEntry: journalController),
+                    SizedBox(height: 20),
+                    MoodButton(
+                      color: currentCategory.color,
+                      text: 'Mood Entry',
+                      onPressed: () async {
+                        // open box
+                        final moodBox = Hive.box<MoodModel>('daily_moods');
+                        final moodEntry = MoodModel(
+                          moodId: moodBox.length + 1,
+                          emojiId: _currentIndexNotifier.value + 1,
+                          moodLog: journalController.text,
+                          timeStamp: DateTime.now(),
                         );
+
+                        await moodBox.add(moodEntry);
+
+                        print("Saved Entry: ${moodEntry.toString()}");
+                        print("All Mood Entries: ${moodBox.values.toList()}");
+
+                        context.read<MoodBloc>().add(AddMoodEvent(moodEntry));
+                        context.read<MoodBloc>().add(LoadMoodEvent());
+
+                        journalController.clear();
+
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(content: Text('Mood entry saved!')),
+                        // );
                       },
                     ),
-                  ),
-//                   Text(
-//                     currentCategory.label,
-//                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//                   ),
-//                   SizedBox(height: 20),
-//                   MoodJournalEntry(journalEntry: journalController),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      final moodEntry = MoodModel(
-                        moodId: 3,
-                        emojiId: 5, // 1-6
-                        moodLog: 'efefke',
-                        timeStamp: DateTime.now(),
-                      );
-
-                      context.read<MoodBloc>().add(
-                        AddMoodEvent(moodEntry),
-                      ); // Add data
-
-                      final moodBox = Hive.box<MoodModel>('daily_moods');
-                      print("Hive Box Data: ${moodBox.values.toList()}");
-
-                      context.read<MoodBloc>().add(
-                        LoadMoodEvent(),
-                      ); // Load data
-                    },
-                    child: Text('Add'),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

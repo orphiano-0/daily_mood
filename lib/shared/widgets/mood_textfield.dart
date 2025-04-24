@@ -9,31 +9,33 @@ class MoodJournalEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAF8EF),
+        border: Border.all(
+          color: const Color(0xFF222222),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.zero,
+      ),
       child: TextField(
         controller: journalEntry,
-        maxLines: 5,
+        maxLines: 9,
+        cursorColor: Colors.black,
         decoration: InputDecoration(
           hintText: "Write your journal entry here...",
-          // Placeholder text
-          hintStyle: const TextStyle(color: Colors.grey),
-          // Styling for hint text
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10), // Rounded corners
-            borderSide: const BorderSide(color: Colors.grey), // Border color
+          hintStyle: const TextStyle(
+            color: Colors.grey,
+            fontFamily: 'Pixel',
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-                color: Colors.blue, width: 2), // Focused border
-          ),
-          filled: true,
-          // Enable background color
-          fillColor: Colors.white,
-          // Background color
-          contentPadding: const EdgeInsets.symmetric(
-              vertical: 12, horizontal: 16), // Inner padding
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(12),
         ),
-        style: const TextStyle(fontSize: 16), // Text style for journal entry
+        style: const TextStyle(
+          fontSize: 12,
+          color: Colors.black,
+          fontFamily: 'Pixel',
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
