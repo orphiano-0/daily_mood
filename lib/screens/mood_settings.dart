@@ -17,7 +17,7 @@ class MoodSettings extends StatelessWidget {
             fontFamily: 'Pixel',
           ),
         ),
-        backgroundColor: Colors.blueGrey.shade900,
+        backgroundColor: Color(0xffC0B2C3),
         centerTitle: true,
       ),
     );

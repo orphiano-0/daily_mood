@@ -67,11 +67,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #    - assets/images/
-  #    - assets/fonts/
-  #    - assets/icons/
-  #    - assets/lottie/
+  assets:
+      - assets/images/
+      - assets/fonts/
+#      - assets/icons/
+#      - assets/lottie/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -89,6 +89,18 @@ flutter:
      - family: Pixel
        fonts:
          - asset: assets/fonts/public-pixel-font/PublicPixel-rv0pA.ttf
+     - family: OpenSans
+       fonts:
+         - asset: assets/fonts/open-sans/OpenSans-Regular.ttf
+         - asset: assets/fonts/open-sans/OpenSans-Bold.ttf
+     - family: Poppins
+       fonts:
+         - asset: assets/fonts/Poppins/Poppins-Regular.otf
+         - asset: assets/fonts/Poppins/Poppins-Bold.otf
+     - family: Roboto
+       fonts:
+         - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+         - asset: assets/fonts/Roboto/Roboto-Bold.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
