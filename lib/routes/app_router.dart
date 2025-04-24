@@ -1,6 +1,9 @@
 import 'package:daily_moode/screens/main_screen.dart';
 import 'package:daily_moode/screens/mood_details.dart';
 import 'package:daily_moode/screens/mood_entry.dart';
+import 'package:daily_moode/screens/mood_entry/mood_daily.dart';
+import 'package:daily_moode/screens/mood_entry/mood_entry.dart';
+import 'package:daily_moode/screens/mood_entry/mood_history.dart';
 import 'package:daily_moode/screens/mood_lists.dart';
 import 'package:daily_moode/screens/mood_settings.dart';
 import 'package:daily_moode/screens/mood_stats.dart';
@@ -14,8 +17,8 @@ final GoRouter router = GoRouter(
         return MainScreen(child: child);
       },
       routes: [
-        GoRoute(path: '/', builder: (context, state) => MoodLists()),
-        GoRoute(path: '/diary', builder: (context, state) => MoodEntryScreen()),
+        GoRoute(path: '/', builder: (context, state) => MoodEntry()),
+        GoRoute(path: '/diary', builder: (context, state) => MoodHistory()),
         GoRoute(
           path: '/moodDetails/:id',
           builder: (context, state) {

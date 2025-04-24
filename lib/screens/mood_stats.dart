@@ -11,29 +11,7 @@ import '../shared/widgets/mood_navigation.dart';
 class MoodStats extends StatelessWidget {
   const MoodStats({super.key});
 
-  List<String> getTopMoods(List<MoodEntry> entries, {int count = 3}) {
-    final Map<String, int> moodFrequency = {};
 
-    for (var entry in entries) {
-      final label = entry.getMoodLabel();
-      moodFrequency[label] = (moodFrequency[label] ?? 0) + 1;
-    }
-
-    final sorted =
-        moodFrequency.entries.toList()
-          ..sort((a, b) => b.value.compareTo(a.value));
-
-    return sorted.take(count).map((e) => e.key).toList();
-  }
-
-  List<MoodEntry> filterByMonth(List<MoodEntry> entries, int year, int month) {
-    return entries
-        .where(
-          (entry) =>
-              entry.timestamp.year == year && entry.timestamp.month == month,
-        )
-        .toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,20 +37,7 @@ class MoodStats extends StatelessWidget {
         20,
         20,
       ), // Dark gray for contrast
-      body: BlocBuilder<MoodBloc, MoodState>(
-        builder: (context, state) {
-          if (state is MoodLoaded) {
-            final entries = state.entries;
-
-            // All time top 3 moods
-            final topAllTime = getTopMoods(entries);
-
-            // This month top 3 moods
-            final now = DateTime.now();
-            final monthlyEntries = filterByMonth(entries, now.year, now.month);
-            final topThisMonth = getTopMoods(monthlyEntries);
-
-            return Padding(
+      body: Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 20.0,
                 horizontal: 12.0,
@@ -85,44 +50,10 @@ class MoodStats extends StatelessWidget {
                     const SizedBox(height: 20),
                     _barChart(),
                     const SizedBox(height: 20),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Top 3 Moods (All Time):',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Text(
-                            topAllTime.join(', '),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Top 3 Moods (${DateFormat('MMMM').format(now)}):',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Text(
-                            topThisMonth.isNotEmpty
-                                ? topThisMonth.join(', ')
-                                : 'No moods logged this month',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
-            );
-          }
-
-          if (state is MoodLoading || state is MoodInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
+            )
     );
   }
 
