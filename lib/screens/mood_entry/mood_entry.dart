@@ -86,19 +86,19 @@ class MoodEntry extends StatelessWidget {
                       },
                     ),
                   ),
-                  Text(
-                    currentCategory.label,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  MoodJournalEntry(journalEntry: journalController),
+//                   Text(
+//                     currentCategory.label,
+//                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//                   ),
+//                   SizedBox(height: 20),
+//                   MoodJournalEntry(journalEntry: journalController),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       final moodEntry = MoodModel(
                         moodId: 3,
-                        emojiId: 1,
-                        moodLog: 'OWOWOWOWW',
+                        emojiId: 5, // 1-6
+                        moodLog: 'efefke',
                         timeStamp: DateTime.now(),
                       );
 

@@ -1,7 +1,5 @@
 import 'package:daily_moode/features/mood_entry/repositories/mood_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'models/mood_model.dart';
 import 'mood_entry_event.dart';
 import 'mood_entry_state.dart';
@@ -14,6 +12,7 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
     on<LoadMoodEntries>(_onLoadMoodEntries);
     on<AddMoodEntry>(_onAddMoodEntry);
     on<DeleteMoodEntry>(_onDeleteMoodEntry);
+    on<ClearAllMoodEntries>(_onClearAllMoodEntries); // Added missing handler
 
     // Load entries when the bloc is created
     add(LoadMoodEntries());
@@ -65,6 +64,22 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
       emit(MoodLoaded(entries: _entries));
     } catch (e) {
       emit(MoodError(message: 'Failed to delete mood entry: $e'));
+    }
+  }
+
+  // Added handler for ClearAllMoodEntries
+  Future<void> _onClearAllMoodEntries(ClearAllMoodEntries event, Emitter<MoodState> emit) async {
+    emit(MoodLoading());
+    try {
+      // Clear all entries from the list
+      _entries.clear();
+
+      // Save empty list to persistent storage
+      await _repository.saveMoodEntries(_entries);
+
+      emit(MoodLoaded(entries: _entries));
+    } catch (e) {
+      emit(MoodError(message: 'Failed to clear all mood entries: $e'));
     }
   }
 }

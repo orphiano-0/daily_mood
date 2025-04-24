@@ -30,8 +30,10 @@ class MoodHistory extends StatelessWidget {
                 final mood = moods[index];
                 return Card(
                   child: ListTile(
+                    // EmojiCategory (assets - label - color)
                     leading: Image.asset(EmojiCategory.fromEmojiId(mood.emojiId).image),
                     title: Text(EmojiCategory.fromEmojiId(mood.emojiId).label),
+                    // moodLog (text) - timeStamp (date)
                     subtitle: Text(mood.moodLog),
                   ),
                 );

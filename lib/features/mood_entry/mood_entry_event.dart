@@ -14,3 +14,8 @@ class DeleteMoodEntry extends MoodEvent {
 
   DeleteMoodEntry({required this.id});
 }
+
+class ClearAllMoodEntries extends MoodEvent {
+  List<Object> get props => [];
+}
+
