@@ -5,7 +5,7 @@ class RankingBar extends StatelessWidget {
   final Color color;
   final double heightFactor;
 
-  RankingBar({
+  const RankingBar({super.key,
     required this.title,
     required this.color,
     required this.heightFactor,
