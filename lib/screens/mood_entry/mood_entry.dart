@@ -2,6 +2,7 @@ import 'package:daily_moode/features/carousel_bloc/carousel_state.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_event.dart';
 import 'package:daily_moode/features/mood_entry/models/mood_models.dart';
+import 'package:daily_moode/shared/widgets/mood_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -20,10 +21,20 @@ class MoodEntry extends StatelessWidget {
           .skip(1)
           .map(
             (emojiCategory) => Padding(
-              padding: const EdgeInsets.all(0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(emojiCategory.image, fit: BoxFit.fill),
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    child: Image.asset(emojiCategory.image, fit: BoxFit.fill),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    emojiCategory.label,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           )
@@ -75,6 +86,13 @@ class MoodEntry extends StatelessWidget {
                       },
                     ),
                   ),
+//                   Text(
+//                     currentCategory.label,
+//                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//                   ),
+//                   SizedBox(height: 20),
+//                   MoodJournalEntry(journalEntry: journalController),
+                  SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       final moodEntry = MoodModel(
