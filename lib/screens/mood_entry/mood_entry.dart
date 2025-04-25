@@ -20,6 +20,7 @@ class MoodEntry extends StatefulWidget {
 }
 
 class _MoodEntryState extends State<MoodEntry> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController journalController = TextEditingController();
   final PageController _pageController = PageController();
 
@@ -61,20 +62,23 @@ class _MoodEntryState extends State<MoodEntry> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      width: double.infinity,
-                      child: PageView(
-                        controller: _pageController,
-                        onPageChanged: (index) {
-                          context.read<SliderBloc>().add(
-                            SliderOnChanged(currentSliderIndex: index + 1),
-                          );
-                        },
-                        children:
-                            EmojiCategory.values.skip(1).map((category) {
-                              return _carouselItem(category.image);
-                            }).toList(),
+                    Form(
+                      key: _formKey,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        width: double.infinity,
+                        child: PageView(
+                          controller: _pageController,
+                          onPageChanged: (index) {
+                            context.read<SliderBloc>().add(
+                              SliderOnChanged(currentSliderIndex: index + 1),
+                            );
+                          },
+                          children:
+                              EmojiCategory.values.skip(1).map((category) {
+                                return _carouselItem(category.image);
+                              }).toList(),
+                        ),
                       ),
                     ),
 
@@ -88,12 +92,65 @@ class _MoodEntryState extends State<MoodEntry> {
                     ),
                     SizedBox(height: 20),
                     SizedBox(height: 20),
-                    MoodJournalEntry(journalEntry: journalController),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFAF8EF),
+                        border: Border.all(
+                          color: const Color(0xFF222222),
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      child: TextField(
+                        controller: journalController,
+                        maxLines: 9,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          hintText: "Write your journal entry here...",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Pixel',
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(12),
+                        ),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                          fontFamily: 'Pixel',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 20),
                     MoodButton(
                       color: currentCategory.color,
                       text: 'Mood Entry',
                       onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Journal must not empty 😊",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ), // Text color
+                              ),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Colors.black,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  8,
+                                ), // Slight rounded corners
+                              ),
+                            ),
+                          );
+                        }
                         // open box
                         final moodBox = Hive.box<MoodModel>('daily_moods');
                         // get the value stored in bloc
@@ -102,7 +159,7 @@ class _MoodEntryState extends State<MoodEntry> {
                         final moodEntry = MoodModel(
                           moodId: moodBox.length + 1,
                           emojiId: emojiId,
-                          moodLog: journalController.text,
+                          moodLog: journalController.text.trim(),
                           timeStamp: DateTime.now(),
                         );
 

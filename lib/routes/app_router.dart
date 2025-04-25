@@ -5,6 +5,7 @@ import 'package:daily_moode/screens/mood_history/mood_history.dart';
 import 'package:daily_moode/screens/mood_settings/mood_settings.dart';
 import 'package:daily_moode/screens/mood_settings/settings_mood.dart';
 import 'package:daily_moode/screens/mood_stats/mood_stats.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -15,8 +16,16 @@ final GoRouter router = GoRouter(
         return MainScreen(child: child);
       },
       routes: [
-        GoRoute(path: '/', builder: (context, state) => MoodEntry()),
-        GoRoute(path: '/diary', builder: (context, state) => MoodHistory()),
+        GoRoute(
+          path: '/',
+          pageBuilder: (context, state) => fadeTransition(MoodEntry(), state),
+        ),
+        GoRoute(
+          path: '/diary',
+          pageBuilder: (context, state) => fadeTransition(MoodHistory(), state),
+        ),
+
+        // GoRoute(path: '/diary', builder: (context, state) => MoodHistory()),
         GoRoute(
           path: '/moodDetails/:id',
           builder: (context, state) {
@@ -24,9 +33,26 @@ final GoRouter router = GoRouter(
             return MoodDetailScreen(id: id);
           },
         ),
-        GoRoute(path: '/statistics', builder: (context, state) => MoodStats()),
-        GoRoute(path: '/settings', builder: (context, state) => SettingsMood()),
+        GoRoute(
+          path: '/statistics',
+          pageBuilder: (context, state) => fadeTransition(MoodStats(), state),
+        ),
+        GoRoute(
+          path: '/settings',
+          pageBuilder:
+              (context, state) => fadeTransition(SettingsMood(), state),
+        ),
       ],
     ),
   ],
 );
+
+CustomTransitionPage fadeTransition(Widget child, GoRouterState state) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}

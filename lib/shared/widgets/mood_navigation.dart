@@ -20,37 +20,43 @@ class MoodNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
-        return BottomNavigationBar(
-          currentIndex: state.currentIndex,
-          onTap: (index) {
-            if (state.currentIndex != index) {
-              context.read<NavigationBloc>().add(NavigationOnChanged(index));
-              context.go(routes[index]);
-            }
-          },
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.note), label: 'Diary'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.pie_chart),
-              label: 'Stats',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          selectedItemColor: Colors.greenAccent,
-          unselectedItemColor: Colors.white,
-          backgroundColor: Colors.blueGrey.shade900,
-          type: BottomNavigationBarType.fixed,
-          selectedLabelStyle: const TextStyle(
-            fontFamily: 'Pixel',
-            fontSize: 10,
+        return Theme(
+          data: ThemeData(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
           ),
-          unselectedLabelStyle: const TextStyle(
-            fontFamily: 'Pixel',
-            fontSize: 10,
+          child: BottomNavigationBar(
+            currentIndex: state.currentIndex,
+            onTap: (index) {
+              if (state.currentIndex != index) {
+                context.read<NavigationBloc>().add(NavigationOnChanged(index));
+                context.go(routes[index]);
+              }
+            },
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(icon: Icon(Icons.note), label: 'Diary'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.pie_chart),
+                label: 'Stats',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Settings',
+              ),
+            ],
+            selectedItemColor: Colors.greenAccent,
+            unselectedItemColor: Colors.white,
+            backgroundColor: Colors.blueGrey.shade900,
+            type: BottomNavigationBarType.fixed,
+            selectedLabelStyle: const TextStyle(
+              fontFamily: 'Pixel',
+              fontSize: 10,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontFamily: 'Pixel',
+              fontSize: 10,
+            ),
           ),
         );
       },
