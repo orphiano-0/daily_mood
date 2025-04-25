@@ -138,9 +138,9 @@ class _MoodEntryState extends State<MoodEntry> {
                         text: 'Mood Entry',
                         onPressed: () async {
                           if (!_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              MoodSnackBar.create('Bullshit')
-                            );
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(MoodSnackBar.create('Bullshit'));
                             print('Empty');
                             return;
                           } else {
@@ -166,9 +166,9 @@ class _MoodEntryState extends State<MoodEntry> {
 
                           journalController.clear();
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            MoodSnackBar.create('Mood saved!')
-                          );
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(MoodSnackBar.create('Mood saved!'));
                         },
                       ),
                     ],

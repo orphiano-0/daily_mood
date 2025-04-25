@@ -2,6 +2,7 @@ import 'package:daily_moode/features/mood_entry/bloc/daily_mood_event.dart';
 import 'package:daily_moode/shared/widgets/mood_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
@@ -104,121 +105,131 @@ class MoodHistory extends StatelessWidget {
     final ValueNotifier<bool> _isExpandedNotifier = ValueNotifier(false);
     final exceedsMaxLines = text.length > 70;
 
-    return Dismissible(
-      key: Key(mood.moodId.toString()),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.red,
+    return GestureDetector(
+      onTap: () => context.go('/moodDetails/${mood.moodId}'),
+      child: Dismissible(
+        key: Key(mood.moodId.toString()),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.red,
+          ),
+          child: Icon(Icons.delete, color: Colors.white),
         ),
-        child: Icon(Icons.delete, color: Colors.white),
-      ),
-      onDismissed: (direction) {
-        context.read<MoodBloc>().add(DeleteMoodEvent(mood.moodId));
+        onDismissed: (direction) {
+          context.read<MoodBloc>().add(DeleteMoodEvent(mood.moodId));
 
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(MoodSnackBar.create('Mood Deleted'));
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: emoji.color,
-          border: Border.all(width: 4, color: Theme.of(context).colorScheme.inversePrimary),
-          borderRadius: BorderRadius.zero,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset(emoji.image, width: 40, height: 40),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    emoji.label.toUpperCase(),
-                    style: const TextStyle(
-                      fontFamily: 'Pixel',
-                      fontSize: 15,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  // Text(
-                  //   mood.moodLog,
-                  //   style: const TextStyle(
-                  //     fontFamily: 'Pixel',
-                  //     fontSize: 10,
-                  //     color: Colors.black87,
-                  //   ),
-                  // ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: _isExpandedNotifier,
-                    builder: (context, isExpanded, child) {
-                      return Text(
-                        text,
-                        style: const TextStyle(
-                          fontFamily: 'Pixel',
-                          fontSize: 10,
-                          color: Colors.black87,
-                        ),
-                        maxLines: isExpanded ? null : 2,
-                        overflow: isExpanded ? null : TextOverflow.ellipsis,
-                        textAlign: TextAlign.justify,
-                      );
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  if (exceedsMaxLines)
-                    TextButton(
-                      onPressed: () {
-                        _isExpandedNotifier.value = !_isExpandedNotifier.value;
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero, // Removes padding
-                        minimumSize:
-                            Size.zero, // Removes default button minimum size
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        overlayColor: Colors.transparent,
-                      ),
-                      child: ValueListenableBuilder<bool>(
-                        valueListenable: _isExpandedNotifier,
-                        builder: (context, isExpanded, child) {
-                          return Text(
-                            isExpanded ? 'Read Less' : 'Read More',
-                            style: TextStyle(
-                              fontFamily: 'Pixel',
-                              fontSize: 9,
-                              color: const Color.fromARGB(255, 88, 102, 195),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-
-                  const SizedBox(height: 4),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      DateFormat('hh:mm a').format(mood.timeStamp),
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(MoodSnackBar.create('Mood Deleted'));
+        },
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: emoji.color,
+            border: Border.all(
+              width: 4,
+              color: Theme.of(context).colorScheme.inversePrimary,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Hero(
+                tag: 'dash',
+                child: Image.asset(emoji.image, width: 40, height: 40),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      emoji.label.toUpperCase(),
                       style: const TextStyle(
                         fontFamily: 'Pixel',
-                        fontSize: 8,
+                        fontSize: 15,
                         color: Colors.black,
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    // Text(
+                    //   mood.moodLog,
+                    //   style: const TextStyle(
+                    //     fontFamily: 'Pixel',
+                    //     fontSize: 10,
+                    //     color: Colors.black87,
+                    //   ),
+                    // ),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isExpandedNotifier,
+                      builder: (context, isExpanded, child) {
+                        return Text(
+                          text,
+                          style: const TextStyle(
+                            fontFamily: 'Pixel',
+                            fontSize: 10,
+                            color: Colors.black87,
+                          ),
+                          maxLines: isExpanded ? null : 2,
+                          overflow: isExpanded ? null : TextOverflow.ellipsis,
+                          textAlign: TextAlign.justify,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    if (exceedsMaxLines)
+                      TextButton(
+                        onPressed: () {
+                          _isExpandedNotifier.value =
+                              !_isExpandedNotifier.value;
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero, // Removes padding
+                          minimumSize:
+                              Size.zero, // Removes default button minimum size
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          overlayColor: Colors.transparent,
+                        ),
+                        child: ValueListenableBuilder<bool>(
+                          valueListenable: _isExpandedNotifier,
+                          builder: (context, isExpanded, child) {
+                            return Text(
+                              isExpanded ? 'Read Less' : 'Read More',
+                              style: TextStyle(
+                                fontFamily: 'Pixel',
+                                fontSize: 9,
+                                color: const Color.fromARGB(255, 88, 102, 195),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                    const SizedBox(height: 4),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        DateFormat('hh:mm a').format(mood.timeStamp),
+                        style: const TextStyle(
+                          fontFamily: 'Pixel',
+                          fontSize: 8,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
