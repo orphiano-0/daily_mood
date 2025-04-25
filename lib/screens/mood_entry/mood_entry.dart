@@ -52,19 +52,19 @@ class _MoodEntryState extends State<MoodEntry> {
             }
           });
 
-          return Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: currentCategory.color,
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Form(
-                      key: _formKey,
-                      child: Container(
+          return Form(
+            key: _formKey,
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: currentCategory.color,
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
                         height: MediaQuery.of(context).size.height * 0.25,
                         width: double.infinity,
                         child: PageView(
@@ -80,105 +80,116 @@ class _MoodEntryState extends State<MoodEntry> {
                               }).toList(),
                         ),
                       ),
-                    ),
 
-                    Text(
-                      currentCategory.label,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Pixel',
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    SizedBox(height: 20),
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFAF8EF),
-                        border: Border.all(
-                          color: const Color(0xFF222222),
-                          width: 3,
-                        ),
-                        borderRadius: BorderRadius.zero,
-                      ),
-                      child: TextField(
-                        controller: journalController,
-                        maxLines: 9,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          hintText: "Write your journal entry here...",
-                          hintStyle: const TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Pixel',
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(12),
-                        ),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
+                      Text(
+                        currentCategory.label,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                           fontFamily: 'Pixel',
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    MoodButton(
-                      color: currentCategory.color,
-                      text: 'Mood Entry',
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
+                      SizedBox(height: 20),
+                      SizedBox(height: 20),
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFAF8EF),
+                          border: Border.all(
+                            color: const Color(0xFF222222),
+                            width: 3,
+                          ),
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        child: TextFormField(
+                          controller: journalController,
+                          maxLines: 9,
+                          cursorColor: Colors.black,
+                          decoration: InputDecoration(
+                            hintText: "Write your journal entry here...",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Pixel',
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(12),
+                          ),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontFamily: 'Pixel',
+                            fontWeight: FontWeight.w600,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return '';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      MoodButton(
+                        color: currentCategory.color,
+                        text: 'Mood Entry',
+                        onPressed: () async {
+                          if (!_formKey.currentState!.validate()) {
+                            // Show Snackbar only if input is invalid
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Journal must not be empty 😊"),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Colors.black,
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            );
+                            print('Empty');
+                            return;
+                          } else {
+                            print('Not Empty');
+                          }
+
+                          // Proceed only when valid
+                          final moodBox = Hive.box<MoodModel>('daily_moods');
+                          final emojiId =
+                              context
+                                  .read<SliderBloc>()
+                                  .state
+                                  .currentSliderIndex;
+                          final moodEntry = MoodModel(
+                            moodId: moodBox.length + 1,
+                            emojiId: emojiId,
+                            moodLog: journalController.text.trim(),
+                            timeStamp: DateTime.now(),
+                          );
+
+                          context.read<MoodBloc>().add(AddMoodEvent(moodEntry));
+                          context.read<MoodBloc>().add(LoadMoodEvent());
+
+                          journalController.clear();
+
+                          // Show success Snackbar AFTER saving successfully
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(
-                                "Journal must not empty 😊",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ), // Text color
-                              ),
+                              content: Text("Mood entry saved! 🎉"),
                               duration: Duration(seconds: 2),
                               backgroundColor: Colors.black,
                               behavior: SnackBarBehavior.floating,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  8,
-                                ), // Slight rounded corners
+                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                           );
-                        }
-                        // open box
-                        final moodBox = Hive.box<MoodModel>('daily_moods');
-                        // get the value stored in bloc
-                        final emojiId =
-                            context.read<SliderBloc>().state.currentSliderIndex;
-                        final moodEntry = MoodModel(
-                          moodId: moodBox.length + 1,
-                          emojiId: emojiId,
-                          moodLog: journalController.text.trim(),
-                          timeStamp: DateTime.now(),
-                        );
-
-                        // await moodBox.add(moodEntry);
-
-                        print("Saved Entry: ${moodEntry.toString()}");
-                        print("All Mood Entries: ${moodBox.values.toList()}");
-
-                        context.read<MoodBloc>().add(AddMoodEvent(moodEntry));
-                        context.read<MoodBloc>().add(LoadMoodEvent());
-
-                        journalController.clear();
-
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   SnackBar(content: Text('Mood entry saved!')),
-                        // );
-                      },
-                    ),
-                  ],
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
