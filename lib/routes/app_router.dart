@@ -24,7 +24,7 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(path: '/statistics', builder: (context, state) => MoodStats()),
-        GoRoute(path: '/settings', builder: (context, state) => MoodSettings()),
+        // GoRoute(path: '/settings', builder: (context, state) => MoodSettings()),
       ],
     ),
   ],

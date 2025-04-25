@@ -4,9 +4,9 @@ import 'package:hive/hive.dart';
 class MoodRepository {
   static const String boxName = 'daily_moods';
 
-  Future<void> entryMood(MoodModel moodId) async {
+  Future<void> entryMood(MoodModel mood) async {
     final box = await Hive.openBox<MoodModel>(boxName);
-    await box.put(moodId.id, moodId);
+    await box.put(mood.moodId, mood);
   }
 
   Future<MoodModel?> getMoodById(int id) async {
@@ -19,8 +19,8 @@ class MoodRepository {
   //   return box.values.toList();
   // }
 
-  Future<void> deleteMood(MoodModel moodId) async {
+  Future<void> deleteMood(int id) async {
     final box = await Hive.openBox<MoodModel>(boxName);
-    await box.delete(moodId.id);
+    await box.delete(id);
   }
 }

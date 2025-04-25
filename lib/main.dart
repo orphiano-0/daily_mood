@@ -1,5 +1,6 @@
 import 'package:daily_moode/features/carousel_bloc/carousel_bloc.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
+import 'package:daily_moode/features/mood_entry/repositories/log_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -19,8 +20,13 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        RepositoryProvider(create: (_) => MoodRepository()),
         BlocProvider(create: (_) => NavigationBloc()),
-        BlocProvider(create: (_) => MoodBloc(moodBox)),
+        BlocProvider(
+          create:
+              (context) =>
+                  MoodBloc(moodRepository: context.read<MoodRepository>()),
+        ),
         BlocProvider(create: (_) => SliderBloc()),
       ],
       child: const MyApp(),

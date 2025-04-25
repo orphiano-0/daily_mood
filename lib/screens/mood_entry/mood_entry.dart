@@ -12,36 +12,15 @@ import '../../features/carousel_bloc/carousel_bloc.dart';
 import '../../features/carousel_bloc/carousel_event.dart';
 import '../utils/emoji_categories.dart';
 
-class MoodEntry extends StatelessWidget {
+class MoodEntry extends StatefulWidget {
   MoodEntry({super.key});
 
+  @override
+  _MoodEntryState createState() => _MoodEntryState();
+}
+
+class _MoodEntryState extends State<MoodEntry> {
   TextEditingController journalController = TextEditingController();
-
-  List<Widget> carouselItem =
-      EmojiCategory.values
-          .skip(1)
-          .map(
-            (emojiCategory) => Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    child: Image.asset(emojiCategory.image, fit: BoxFit.fill),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    emojiCategory.label,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          )
-          .toList();
-
-  final ValueNotifier<int> _currentIndexNotifier = ValueNotifier(1);
   final PageController _pageController = PageController();
 
   @override
@@ -49,12 +28,29 @@ class MoodEntry extends StatelessWidget {
     return Scaffold(
       body: BlocConsumer<SliderBloc, SliderState>(
         listener: (context, state) {
-          // TODO: implement listener
+          // You can handle side effects here, if needed.
+          final int emojiId = state.currentSliderIndex ?? 1;
+          print('Updated ID: ${emojiId}');
         },
         builder: (context, state) {
+          int currentSliderIndex = state.currentSliderIndex ?? 1;
+          final int emojiCount = EmojiCategory.values.length - 1;
+
+          if (currentSliderIndex < 1) currentSliderIndex = 1;
+          if (currentSliderIndex > emojiCount) currentSliderIndex = emojiCount;
+
           final EmojiCategory currentCategory = EmojiCategory.fromEmojiId(
-            state.currentSliderIndex,
+            currentSliderIndex,
           );
+
+          print('Emoji Category: ${currentCategory.emojiId}');
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_pageController.hasClients) {
+              _pageController.jumpToPage(currentSliderIndex - 1);
+            }
+          });
+
           return Container(
             width: double.infinity,
             height: double.infinity,
@@ -68,28 +64,27 @@ class MoodEntry extends StatelessWidget {
                     Container(
                       height: MediaQuery.of(context).size.height * 0.25,
                       width: double.infinity,
-                      child: ValueListenableBuilder<int>(
-                        valueListenable: _currentIndexNotifier,
-                        builder: (context, currentIndex, child) {
-                          return PageView(
-                            controller: _pageController,
-                            onPageChanged: (index) {
-                              _currentIndexNotifier.value = index;
-                              context.read<SliderBloc>().add(
-                                SliderOnChanged(currentSliderIndex: index + 1),
-                              );
-                            },
-                            children:
-                                EmojiCategory.values.skip(1).map((category) {
-                                  return _carouselItem(category.image);
-                                }).toList(),
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          context.read<SliderBloc>().add(
+                            SliderOnChanged(currentSliderIndex: index + 1),
                           );
                         },
+                        children:
+                            EmojiCategory.values.skip(1).map((category) {
+                              return _carouselItem(category.image);
+                            }).toList(),
                       ),
                     ),
+
                     Text(
                       currentCategory.label,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Pixel'),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Pixel',
+                      ),
                     ),
                     SizedBox(height: 20),
                     SizedBox(height: 20),
@@ -101,14 +96,17 @@ class MoodEntry extends StatelessWidget {
                       onPressed: () async {
                         // open box
                         final moodBox = Hive.box<MoodModel>('daily_moods');
+                        // get the value stored in bloc
+                        final emojiId =
+                            context.read<SliderBloc>().state.currentSliderIndex;
                         final moodEntry = MoodModel(
                           moodId: moodBox.length + 1,
-                          emojiId: _currentIndexNotifier.value + 1,
+                          emojiId: emojiId,
                           moodLog: journalController.text,
                           timeStamp: DateTime.now(),
                         );
 
-                        await moodBox.add(moodEntry);
+                        // await moodBox.add(moodEntry);
 
                         print("Saved Entry: ${moodEntry.toString()}");
                         print("All Mood Entries: ${moodBox.values.toList()}");

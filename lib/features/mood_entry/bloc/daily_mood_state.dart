@@ -10,6 +10,8 @@ abstract class MoodState extends Equatable {
 
 class MoodInitial extends MoodState {}
 
+class MoodLoading extends MoodState {}
+
 class MoodAdded extends MoodState {
   final MoodModel entry;
 
@@ -29,7 +31,13 @@ class MoodDelete extends MoodState {
   final MoodModel entry;
 
   const MoodDelete({required this.entry});
-
 }
 
+class MoodFailed extends MoodState {
+  final String message;
 
+  MoodFailed(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

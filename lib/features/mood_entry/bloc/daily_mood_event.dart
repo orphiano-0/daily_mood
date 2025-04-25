@@ -3,8 +3,6 @@ import 'package:equatable/equatable.dart';
 import '../models/mood_models.dart';
 
 abstract class MoodEvent extends Equatable {
-  const MoodEvent();
-
   @override
   List<Object?> get props => [];
 }
@@ -12,7 +10,7 @@ abstract class MoodEvent extends Equatable {
 class AddMoodEvent extends MoodEvent {
   final MoodModel entry;
 
-  const AddMoodEvent(this.entry);
+  AddMoodEvent(this.entry);
 
   @override
   List<Object?> get props => [];
@@ -21,11 +19,10 @@ class AddMoodEvent extends MoodEvent {
 class LoadMoodEvent extends MoodEvent {}
 
 class DeleteMoodEvent extends MoodEvent {
-  final MoodModel entry;
+  final int entryId;
 
-  const DeleteMoodEvent(this.entry);
+  DeleteMoodEvent(this.entryId);
 
   @override
-  List<Object?> get props => [entry];
-
+  List<Object?> get props => [entryId];
 }
