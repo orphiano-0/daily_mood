@@ -1,3 +1,4 @@
+import 'package:daily_moode/features/mood_entry/bloc/daily_mood_event.dart';
 import 'package:daily_moode/features/mood_entry/models/mood_model.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_state.dart';
@@ -16,6 +17,7 @@ class MoodStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<MoodBloc>().add(LoadMoodEvent());
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -24,20 +26,17 @@ class MoodStats extends StatelessWidget {
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontFamily: 'Pixel', // Use a pixelated font for retro style
+            fontFamily: 'Pixel',
           ),
         ),
-        backgroundColor: Colors.blueGrey.shade900, // Dark background for retro feel
+        backgroundColor: Colors.blueGrey.shade900,
         centerTitle: true,
         elevation: 0, // Flat look
       ),
-      backgroundColor: const Color.fromARGB(255, 20, 20, 20), // Dark gray for contrast
       body: BlocBuilder<MoodBloc, MoodState>(
         builder: (context, state) {
           if (state is MoodLoaded) {
             final moods = state.entry;
-
-            // Process moods for distribution calculation
             final moodDistribution = _calculateMoodDistribution(moods);
 
             return Padding(
@@ -59,7 +58,6 @@ class MoodStats extends StatelessWidget {
               ),
             );
           }
-
           return const Center(
             child: CircularProgressIndicator(color: Colors.white),
           );
@@ -73,7 +71,6 @@ class MoodStats extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 30, 30, 30),
         borderRadius: BorderRadius.circular(4),
       ),
       child: const Text(
@@ -82,7 +79,6 @@ class MoodStats extends StatelessWidget {
           fontSize: 18,
           fontWeight: FontWeight.bold,
           fontFamily: 'Pixel',
-          color: Colors.white,
         ),
         textAlign: TextAlign.center,
       ),
@@ -126,7 +122,6 @@ class MoodStats extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Pixel',
-                    color: Colors.white,
                   ),
                   radius: 60, // Adjust the radius to fit within the box
                   titlePositionPercentageOffset: 0.6,
@@ -143,8 +138,6 @@ class MoodStats extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 30, 30, 30),
-        border: Border.all(color: Colors.white, width: 2),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Column(
@@ -158,7 +151,6 @@ class MoodStats extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Pixel',
-                color: Colors.white,
               ),
             ),
           ),
@@ -169,7 +161,6 @@ class MoodStats extends StatelessWidget {
                 child: Text(
                   'No moods recorded yet.',
                   style: TextStyle(
-                    color: Colors.white70,
                     fontFamily: 'Pixel',
                   ),
                 ),
@@ -181,7 +172,6 @@ class MoodStats extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: moods.length,
               separatorBuilder: (context, index) => const Divider(
-                color: Colors.white24,
                 height: 1,
               ),
               itemBuilder: (context, index) {
@@ -225,7 +215,6 @@ class MoodStats extends StatelessWidget {
                                 Text(
                                   formattedDate,
                                   style: const TextStyle(
-                                    color: Colors.white54,
                                     fontSize: 8,
                                     fontFamily: 'Pixel',
                                   ),
@@ -239,7 +228,6 @@ class MoodStats extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 10,
-                                color: Colors.white,
                                 fontFamily: 'Pixel',
                               ),
                             ),
@@ -268,28 +256,23 @@ class MoodStats extends StatelessWidget {
       ];
     }
 
-    // Filter for current month's entries
     final now = DateTime.now();
     final currentMonthMoods = moods.where((mood) {
       final moodDate = mood.timeStamp;
       return moodDate.year == now.year && moodDate.month == now.month;
     }).toList();
 
-    // If no entries for current month, use all entries
     final moodsToUse = currentMonthMoods.isEmpty ? moods : currentMonthMoods;
 
-    // Count occurrences of each mood category
     final Map<String, int> categoryCount = {};
     for (final mood in moodsToUse) {
       final category = EmojiCategory.fromEmojiId(mood.emojiId).label;
       categoryCount[category] = (categoryCount[category] ?? 0) + 1;
     }
 
-    // Sort by count (descending)
     final sortedCategories = categoryCount.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    // Take top 3 categories, group the rest as "Others"
     final topCategories = sortedCategories.take(3).toList();
     final totalCount = moodsToUse.length;
     final topCategoriesCount = topCategories.fold<int>(0, (sum, entry) => sum + entry.value);

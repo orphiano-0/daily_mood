@@ -10,73 +10,71 @@ class SettingsMood extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SettingBloc(),
-      child: BlocBuilder<SettingBloc, SettingState>(
-        builder: (context, state) {
-          final themeBloc = BlocProvider.of<SettingBloc>(context);
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'SETTINGS',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Pixel',
-                  color: Colors.white,
+    return BlocBuilder<SettingBloc, SettingState>(
+      builder: (context, state) {
+        final themeBloc = BlocProvider.of<SettingBloc>(context);
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'SETTINGS',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Pixel',
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: Colors.blueGrey.shade900,
+            centerTitle: true,
+            elevation: 0,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SettingsButton(
+                      text: 'Light Mode',
+                      icon: Icons.light_mode,
+                      // color: Colors.orangeAccent.shade200,
+                      onPressed: () {
+                        themeBloc.add(LightThemeSelected());
+                        print('Theme: ${LightThemeSelected}');
+                      },
+                    ),
+                    const SizedBox(width: 10),
+                    SettingsButton(
+                      text: 'Dark Mode',
+                      icon: Icons.dark_mode,
+                      onPressed: () {
+                        themeBloc.add(DarkThemeSelected());
+                        print('Theme: ${DarkThemeSelected}');
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              backgroundColor: Colors.blueGrey.shade900,
-              centerTitle: true,
-              elevation: 0,
+                const SizedBox(height: 20),
+                SettingsButton(
+                  text: 'Delete All',
+                  icon: Icons.delete,
+                  // color: Colors.transparent,
+                  onPressed: () {},
+                ),
+                const SizedBox(height: 20),
+                SettingsButton(
+                  text: 'Team',
+                  icon: Icons.bubble_chart_rounded,
+                  // color: Colors.redAccent,
+                  onPressed: () {},
+                ),
+              ],
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SettingsButton(
-                        text: 'Light Mode',
-                        icon: Icons.light_mode,
-                        color: Colors.orangeAccent.shade200,
-                        onPressed: () {
-                          themeBloc.add(LightThemeSelected());
-                        },
-                      ),
-                      const SizedBox(width: 10),
-                      SettingsButton(
-                        text: 'Dark Mode',
-                        icon: Icons.dark_mode,
-                        color: Colors.blueGrey,
-                        onPressed: () {
-                          themeBloc.add(DarkThemeSelected());
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  SettingsButton(
-                    text: 'Delete All',
-                    icon: Icons.delete,
-                    color: Colors.transparent,
-                    onPressed: () {},
-                  ),
-                  const SizedBox(height: 20),
-                  SettingsButton(
-                    text: 'Team',
-                    icon: Icons.bubble_chart_rounded,
-                    color: Colors.redAccent,
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

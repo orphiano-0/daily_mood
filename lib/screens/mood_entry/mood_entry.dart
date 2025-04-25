@@ -3,6 +3,7 @@ import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_event.dart';
 import 'package:daily_moode/features/mood_entry/models/mood_models.dart';
 import 'package:daily_moode/shared/widgets/mood_button.dart';
+import 'package:daily_moode/shared/widgets/mood_snackbar.dart';
 import 'package:daily_moode/shared/widgets/mood_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -100,7 +101,7 @@ class _MoodEntryState extends State<MoodEntry> {
                           color: const Color(0xFFFAF8EF),
                           border: Border.all(
                             color: const Color(0xFF222222),
-                            width: 3,
+                            width: 4,
                           ),
                           borderRadius: BorderRadius.zero,
                         ),
@@ -137,17 +138,8 @@ class _MoodEntryState extends State<MoodEntry> {
                         text: 'Mood Entry',
                         onPressed: () async {
                           if (!_formKey.currentState!.validate()) {
-                            // Show Snackbar only if input is invalid
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Journal must not be empty 😊"),
-                                duration: Duration(seconds: 2),
-                                backgroundColor: Colors.black,
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
+                              MoodSnackBar.create('Bullshit')
                             );
                             print('Empty');
                             return;
@@ -174,17 +166,8 @@ class _MoodEntryState extends State<MoodEntry> {
 
                           journalController.clear();
 
-                          // Show success Snackbar AFTER saving successfully
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Mood entry saved! 🎉"),
-                              duration: Duration(seconds: 2),
-                              backgroundColor: Colors.black,
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
+                            MoodSnackBar.create('Mood saved!')
                           );
                         },
                       ),

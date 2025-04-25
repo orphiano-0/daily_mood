@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 class SettingsButton extends StatelessWidget {
   final String text;
   final IconData icon;
-  final Color color;
   final VoidCallback onPressed;
 
   const SettingsButton({
     super.key,
     required this.text,
     required this.icon,
-    required this.color,
     required this.onPressed,
   });
 
@@ -21,8 +19,7 @@ class SettingsButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
-          color: color,
-          border: Border.all(color: Colors.black, width: 4),
+          border: Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 4),
         ),
         child: Row(
           children: [
@@ -32,7 +29,6 @@ class SettingsButton extends StatelessWidget {
               text.toUpperCase(),
               style: const TextStyle(
                 fontSize: 10,
-                color: Colors.black,
                 fontFamily: 'Pixel',
               ),
             ),

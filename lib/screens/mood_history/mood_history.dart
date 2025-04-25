@@ -1,4 +1,5 @@
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_event.dart';
+import 'package:daily_moode/shared/widgets/mood_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -33,7 +34,7 @@ class MoodHistory extends StatelessWidget {
           if (state is MoodLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is MoodLoaded) {
-            final moods = state.entry;
+            final moods = state.entry.reversed.toList();
             if (moods.isEmpty) {
               return const Center(
                 child: Text(
@@ -59,7 +60,6 @@ class MoodHistory extends StatelessWidget {
               );
 
               if (lastDate == null || currentDate.isAfter(lastDate)) {
-                // Add a date divider before this mood
                 moodWidgets.add(
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -69,7 +69,6 @@ class MoodHistory extends StatelessWidget {
                         style: const TextStyle(
                           fontFamily: 'Pixel',
                           fontSize: 10,
-                          color: Colors.blueGrey,
                         ),
                       ),
                     ),
@@ -78,7 +77,6 @@ class MoodHistory extends StatelessWidget {
                 lastDate = currentDate;
               }
 
-              // Add the mood card
               moodWidgets.add(_pixelatedCard(context, mood));
             }
 
@@ -104,7 +102,7 @@ class MoodHistory extends StatelessWidget {
     final String text = mood.moodLog;
     final emoji = EmojiCategory.fromEmojiId(mood.emojiId);
     final ValueNotifier<bool> _isExpandedNotifier = ValueNotifier(false);
-    final exceedsMaxLines = text.length > 100;
+    final exceedsMaxLines = text.length > 70;
 
     return Dismissible(
       key: Key(mood.moodId.toString()),
@@ -124,14 +122,14 @@ class MoodHistory extends StatelessWidget {
 
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('note deleted')));
+        ).showSnackBar(MoodSnackBar.create('Mood Deleted'));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: emoji.color,
-          border: Border.all(color: Colors.black, width: 4),
+          border: Border.all(width: 4, color: Theme.of(context).colorScheme.inversePrimary),
           borderRadius: BorderRadius.zero,
         ),
         child: Row(
