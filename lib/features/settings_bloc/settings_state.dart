@@ -1,6 +1,13 @@
-part of 'settings_bloc.dart';
+import 'package:daily_moode/features/mood_entry/models/mood_models.dart';
 
-@immutable
-sealed class SettingsState {}
+abstract class SettingState {}
 
-final class SettingsInitial extends SettingsState {}
+class LightTheme extends SettingState {}
+
+class DarkTheme extends SettingState {}
+
+class DeleteData extends SettingState {
+  final MoodModel allData;
+
+  DeleteData({required this.allData});
+}

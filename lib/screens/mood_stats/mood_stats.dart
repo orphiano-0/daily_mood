@@ -187,7 +187,7 @@ class MoodStats extends StatelessWidget {
               itemBuilder: (context, index) {
                 final mood = moods[index];
                 final emojiCategory = EmojiCategory.fromEmojiId(mood.emojiId);
-                final formattedDate = DateFormat('MMM d, yyyy - HH:mm').format(mood.timeStamp);
+                final formattedDate = DateFormat('MMM d, yyyy').format(mood.timeStamp);
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
@@ -235,7 +235,10 @@ class MoodStats extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               mood.moodLog,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
+                                fontSize: 10,
                                 color: Colors.white,
                                 fontFamily: 'Pixel',
                               ),

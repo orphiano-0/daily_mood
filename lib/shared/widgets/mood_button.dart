@@ -4,7 +4,13 @@ class MoodButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final Color color;
-  const MoodButton({super.key, required this.text, required this.onPressed, required this.color});
+
+  const MoodButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class MoodButton extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             color: Colors.black,
-            fontFamily: 'Pixel', // You’ll need to add this pixel font
+            fontFamily: 'Pixel',
           ),
         ),
       ),

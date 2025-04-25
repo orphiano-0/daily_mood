@@ -1,13 +1,10 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:daily_moode/features/settings_bloc/settings_event.dart';
+import 'package:daily_moode/features/settings_bloc/settings_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'settings_event.dart';
-part 'settings_state.dart';
-
-class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc() : super(SettingsInitial()) {
-    on<SettingsEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+class SettingBloc extends Bloc<SettingEvent, SettingState> {
+  SettingBloc() : super(LightTheme()) {
+    on<LightThemeSelected>((event, emit) => emit(LightTheme()));
+    on<DarkThemeSelected>((event, emit) => emit(DarkTheme()));
   }
 }
