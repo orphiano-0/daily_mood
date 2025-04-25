@@ -21,9 +21,6 @@ void main() async {
   Hive.registerAdapter(MoodModelAdapter());
   final moodBox = await Hive.openBox<MoodModel>('daily_moods');
 
-  // final settingBloc = SettingBloc();
-  // await settingBloc.stream.first;
-
   runApp(
     MultiBlocProvider(
       providers: [

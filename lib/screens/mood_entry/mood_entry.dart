@@ -3,6 +3,7 @@ import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_event.dart';
 import 'package:daily_moode/features/mood_entry/models/mood_models.dart';
 import 'package:daily_moode/shared/widgets/mood_button.dart';
+import 'package:daily_moode/shared/widgets/mood_dialog.dart';
 import 'package:daily_moode/shared/widgets/mood_snackbar.dart';
 import 'package:daily_moode/shared/widgets/mood_textfield.dart';
 import 'package:flutter/material.dart';
@@ -166,9 +167,14 @@ class _MoodEntryState extends State<MoodEntry> {
 
                           journalController.clear();
 
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(MoodSnackBar.create('Mood saved!'));
+                          // ScaffoldMessenger.of(
+                          //   context,
+                          // ).showSnackBar(MoodSnackBar.create('Mood saved!'));
+                          final emoji = EmojiCategory.fromEmojiId(moodEntry!.emojiId);
+                          showDialog(context: context, builder: (context) {
+                            return MoodDialog(message: emoji.message);
+                          });
+
                         },
                       ),
                     ],

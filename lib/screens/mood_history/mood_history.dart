@@ -9,6 +9,8 @@ import 'package:daily_moode/features/mood_entry/bloc/daily_mood_bloc.dart';
 import 'package:daily_moode/features/mood_entry/bloc/daily_mood_state.dart';
 import 'package:daily_moode/screens/utils/emoji_categories.dart';
 
+import '../../shared/widgets/confirmation_dialog.dart';
+
 class MoodHistory extends StatelessWidget {
   const MoodHistory({super.key});
 
@@ -120,12 +122,22 @@ class MoodHistory extends StatelessWidget {
           ),
           child: Icon(Icons.delete, color: Colors.white),
         ),
-        onDismissed: (direction) {
-          context.read<MoodBloc>().add(DeleteMoodEvent(mood.moodId));
+        confirmDismiss: (direction) async {
+          final shouldDismiss = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return ConfirmationDialog(
+                text: 'Are you sure you want to delete?',
+                onPressed: () {
+                  context.read<MoodBloc>().add(DeleteMoodEvent(mood.moodId));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(MoodSnackBar.create('Mood Deleted'));
+                },
+              );
+            },
+          );
 
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(MoodSnackBar.create('Mood Deleted'));
+          return shouldDismiss ?? false;
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 10),
@@ -167,51 +179,19 @@ class MoodHistory extends StatelessWidget {
                     //     color: Colors.black87,
                     //   ),
                     // ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: _isExpandedNotifier,
-                      builder: (context, isExpanded, child) {
-                        return Text(
+                    Text(
                           text,
                           style: const TextStyle(
                             fontFamily: 'Pixel',
                             fontSize: 10,
                             color: Colors.black87,
                           ),
-                          maxLines: isExpanded ? null : 2,
-                          overflow: isExpanded ? null : TextOverflow.ellipsis,
+                          maxLines:  2,
+                          overflow:  TextOverflow.ellipsis,
                           textAlign: TextAlign.justify,
-                        );
-                      },
-                    ),
+                        ),
+
                     SizedBox(height: 10),
-                    if (exceedsMaxLines)
-                      TextButton(
-                        onPressed: () {
-                          _isExpandedNotifier.value =
-                              !_isExpandedNotifier.value;
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero, // Removes padding
-                          minimumSize:
-                              Size.zero, // Removes default button minimum size
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          overlayColor: Colors.transparent,
-                        ),
-                        child: ValueListenableBuilder<bool>(
-                          valueListenable: _isExpandedNotifier,
-                          builder: (context, isExpanded, child) {
-                            return Text(
-                              isExpanded ? 'Read Less' : 'Read More',
-                              style: TextStyle(
-                                fontFamily: 'Pixel',
-                                fontSize: 9,
-                                color: const Color.fromARGB(255, 88, 102, 195),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
 
                     const SizedBox(height: 4),
                     Align(

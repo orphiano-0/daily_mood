@@ -1,9 +1,7 @@
 import 'package:daily_moode/screens/main_screen.dart';
-import 'package:daily_moode/screens/mood_details.dart';
 import 'package:daily_moode/screens/mood_entry/mood_entry.dart';
 import 'package:daily_moode/screens/mood_history/mood_details.dart';
 import 'package:daily_moode/screens/mood_history/mood_history.dart';
-import 'package:daily_moode/screens/mood_settings/mood_settings.dart';
 import 'package:daily_moode/screens/mood_settings/settings_mood.dart';
 import 'package:daily_moode/screens/mood_stats/mood_stats.dart';
 import 'package:flutter/widgets.dart';

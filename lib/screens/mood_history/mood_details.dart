@@ -85,22 +85,30 @@ class MoodDetails extends StatelessWidget {
                       ),
                       child: TextFormField(
                         controller: journalController,
-                        maxLines: 9,
                         cursorColor: Colors.black,
+                        maxLines: null, // Allows the input to grow vertically without limits
+                        minLines: 1, // Starts with one line by default
                         decoration: InputDecoration(
-                          hintStyle: TextStyle(
+                          hintText: "Write your journal entry here...",
+                          hintStyle: const TextStyle(
                             color: Colors.grey,
                             fontFamily: 'Pixel',
                           ),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(12),
+                          contentPadding: const EdgeInsets.all(12),
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.black,
                           fontFamily: 'Pixel',
                           fontWeight: FontWeight.w600,
                         ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(height: 20),
