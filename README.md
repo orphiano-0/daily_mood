@@ -3,7 +3,6 @@
 [![Flutter](https://img.shields.io/badge/Flutter-Framework-blue?logo=flutter)](https://flutter.dev/)  
 [![State Management](https://img.shields.io/badge/State%20Management-flutter_bloc-blueviolet)](https://pub.dev/packages/flutter_bloc)  
 [![Routing](https://img.shields.io/badge/Routing-go_router-lightgreen)](https://pub.dev/packages/go_router)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Track your mood, understand yourself better, and see your emotional journey over time.**
 
